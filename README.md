@@ -37,13 +37,16 @@
 	- asks for value to search for (per line)
 	- displays all occurences
 	- jumps to selected occurence
+    
 \> Allows for easy navigation to other parts of the code
 - Back
 	- jumps back to recent location previous to execution of the 'Jump' command
+
 \> Allows for easy reversal of 'Jump' command
 - Peek
 	- asks for duration of peeking (in seconds)
 	- runs 'Jump' command
 	- wait for specified amount of time
 	- then runs 'Back' command
+
 \> Allows for quick and easy lookup methods of other parts of the code
