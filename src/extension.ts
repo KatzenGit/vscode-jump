@@ -1,7 +1,11 @@
 import * as vscode from 'vscode';
 
+let lastPos: vscode.Selection;
+
 export function activate(context: vscode.ExtensionContext) {
-	let disposable = vscode.commands.registerCommand('extension.jump', () => {
+	lastPos = new vscode.Selection(0, 0, 0, 0);
+
+	const jump = () => {
 		vscode.window.showInputBox().then(text => {
 			if(!text) return;
 			
@@ -27,6 +31,8 @@ export function activate(context: vscode.ExtensionContext) {
 					
 					if(!editor) return;
 					
+					lastPos = editor.selection;
+
 					editor.selection = new vscode.Selection(y, x, y, x + text.length);
 
 					let ry0 = y - 5;
@@ -38,9 +44,23 @@ export function activate(context: vscode.ExtensionContext) {
 				})
 			}
 		})		
-	});
+	};
+	const back = () => {
+		let editor = vscode.window.activeTextEditor;
+		if(!editor) return;
 
-	context.subscriptions.push(disposable);
+		editor.selection = lastPos;
+
+		let ry0 = lastPos.start.line - 5;
+		if(ry0 < 0) ry0 = 0;
+		let ry1 = lastPos.end.line + 5;
+		if(ry1 > editor.document.lineCount) ry1 = editor.document.lineCount;
+
+		editor.revealRange(new vscode.Range(ry0, 0, ry1, 0));
+	}
+
+	context.subscriptions.push(vscode.commands.registerCommand("extension.jump", jump));
+	context.subscriptions.push(vscode.commands.registerCommand("extension.back", back));
 }
 
 export function deactivate() {}
