@@ -4,8 +4,8 @@ const vscode = require("vscode");
 let lastPos;
 function activate(context) {
     lastPos = new vscode.Selection(0, 0, 0, 0);
-    const jump = () => {
-        vscode.window.showInputBox().then(text => {
+    const jump = (backAfter) => {
+        vscode.window.showInputBox({ prompt: "What do you want to search for?" }).then(text => {
             if (!text)
                 return;
             let editor = vscode.window.activeTextEditor;
@@ -39,6 +39,11 @@ function activate(context) {
                     if (ry1 > editor.document.lineCount)
                         ry1 = editor.document.lineCount;
                     editor.revealRange(new vscode.Range(ry0, 0, ry1, 0));
+                    if (backAfter == 0)
+                        return;
+                    setTimeout(() => {
+                        vscode.commands.executeCommand("extension.back");
+                    }, backAfter);
                 });
             }
         });
@@ -56,8 +61,17 @@ function activate(context) {
             ry1 = editor.document.lineCount;
         editor.revealRange(new vscode.Range(ry0, 0, ry1, 0));
     };
-    context.subscriptions.push(vscode.commands.registerCommand("extension.jump", jump));
+    const peek = () => {
+        vscode.window.showInputBox({ prompt: "How long do you want to peek for?" }).then(text => {
+            if (!text)
+                return;
+            let ms = parseInt(text);
+            jump(ms * 1000);
+        });
+    };
+    context.subscriptions.push(vscode.commands.registerCommand("extension.jump", () => jump(0)));
     context.subscriptions.push(vscode.commands.registerCommand("extension.back", back));
+    context.subscriptions.push(vscode.commands.registerCommand("extension.peek", peek));
 }
 exports.activate = activate;
 function deactivate() { }

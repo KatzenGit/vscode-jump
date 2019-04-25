@@ -12,7 +12,8 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.jump",
-		"onCommand:extension.back"
+		"onCommand:extension.back",
+		"onCommand:extension.peek"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -24,6 +25,10 @@
 			{
 				"command": "extension.back",
 				"title": "Jump Back"
+			},
+			{
+				"command": "extension.peek",
+				"title": "Peek"
 			}
 		]
 	},
