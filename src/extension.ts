@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('extension.jump', () => {
 		vscode.window.showInputBox().then(text => {
-			text = "" + text;
+			if(!text) return;
 			
 			let editor = vscode.window.activeTextEditor;
 			if(editor) {

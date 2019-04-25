@@ -4,7 +4,8 @@ const vscode = require("vscode");
 function activate(context) {
     let disposable = vscode.commands.registerCommand('extension.jump', () => {
         vscode.window.showInputBox().then(text => {
-            text = "" + text;
+            if (!text)
+                return;
             let editor = vscode.window.activeTextEditor;
             if (editor) {
                 let lines = editor.document.getText().split('\n');
